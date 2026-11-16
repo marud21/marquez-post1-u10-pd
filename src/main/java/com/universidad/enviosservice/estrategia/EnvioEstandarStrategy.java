@@ -2,19 +2,12 @@ package com.universidad.enviosservice.estrategia;
 
 public class EnvioEstandarStrategy implements EstrategiaEnvio {
 
+    private static final TarifaPorPeso TARIFA = new TarifaPorPeso(0.5, 0, 0.8, 1.2);
+    private static final double RECARGO_LARGA_DISTANCIA = 10;
+
     @Override
     public double calcular(double pesoKg, double distanciaKm) {
-        double costo;
-        if (pesoKg <= 5) {
-            costo = distanciaKm * 0.5;
-        } else if (pesoKg <= 20) {
-            costo = distanciaKm * 0.5 + (pesoKg - 5) * 0.8;
-        } else {
-            costo = distanciaKm * 0.5 + 15 * 0.8 + (pesoKg - 20) * 1.2;
-        }
-        if (distanciaKm > 500) {
-            costo += 10;
-        }
-        return costo;
+        double costo = TARIFA.costoBase(pesoKg, distanciaKm);
+        return distanciaKm > 500 ? costo + RECARGO_LARGA_DISTANCIA : costo;
     }
 }
